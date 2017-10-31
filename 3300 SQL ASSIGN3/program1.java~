@@ -1,0 +1,45 @@
+import java.sql.*;
+import java.util.Locale;
+import java.lang.String;
+
+public class program1 {
+	public static void main(String args[]){
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+			String url = "jdbc:mysql://localhost:3306";
+			Connection con = DriverManager.getConnection(url, args[0], args[1]);
+			Statement stmt = con.createStatement();
+			stmt.execute("DROP DATABASE IF EXISTS TTU");
+			stmt.execute("CREATE DATABASE TTU");
+			con.close();
+		
+
+			con = DriverManager.getConnection(url + "/TTU", args[0], args[1]);
+			stmt = con.createStatement();
+			stmt.execute("create table students (" +
+			"tnumber char(8) PRIMARY KEY, " +
+			"firstname varchar(20) not null, " +
+			"lastname varchar(20) not null, " +
+			"dateofbirth date, " +
+			"index(lastname)) " +
+			"ENGINE=INNODB");
+	
+			stmt.execute("INSERT INTO students(tnumber, firstname, " +
+			"lastname, dateofbirth) " +
+			"VALUES ('00001234', 'Joe', 'Smith', '1950-08-12')");
+
+			ResultSet rs = stmt.executeQuery("select * from students");
+			System.out.println("Display all results:");
+			while(rs.next()){
+				String tnumber = rs.getString("students.tnumber");
+				String firstname = rs.getString("students.firstname");
+				String lastname = rs.getString("students.lastname");
+				String dateofbirth = rs.getString("students.dateofbirth");
+				System.out.format("%-15s%-15s%-15s%-15s%n", tnumber, firstname, lastname, dateofbirth);
+			}
+			con.close();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+}

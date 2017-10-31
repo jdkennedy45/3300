@@ -1,0 +1,10 @@
+.PHONY: run
+
+all: run
+
+run: program2.c
+	 ./program2 $(HOST) $(DATABASE) $(USER) $(PASSWORD)
+
+program2:
+	gcc program2.c -o program2
+
